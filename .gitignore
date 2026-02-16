@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+venv/
+.env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# YOLOv8 model weights (large files)
+*.pt
+*.engine
+*.onnx
+
+# Training runs & logs
+runs/
+logs/
+
+# Datasets (too large for git)
+datasets/ppe_helmet_mask/
+datasets/images/
+datasets/labels/
+
+# Encryption keys
+configs/.encryption_key
+
+# Gemini/Agent
+.gemini/

@@ -1,0 +1,148 @@
+# ============================================================
+# Factory AI Surveillance System — Master Configuration
+# ============================================================
+
+# --- Model ---
+model:
+  weights: "yolov8m.pt"               # Pretrained COCO model (auto-downloaded). Replace with "models/best.pt" after training.
+  confidence: 0.45                   # Minimum confidence threshold
+  iou_threshold: 0.5                 # NMS IoU threshold
+  imgsz: 640                         # Inference image size
+  classes: null                      # null = all classes, or list of class indices [0,1,5]
+
+# --- Device / CUDA ---
+device:
+  gpu_id: 0                          # CUDA device index
+  fp16: true                         # Enable FP16 half-precision inference
+  cudnn_benchmark: true              # Enable cuDNN auto-tuner
+  batch_size: 1                      # Batch size (1 for real-time single stream)
+
+# --- Video Sources ---
+# Supports RTSP URLs, HTTP streams, video files, or webcam index (0)
+sources:
+  - name: "Main Floor Camera"
+    url: 0                           # 0 = default webcam, or "rtsp://user:pass@ip:554/stream"
+    enabled: true
+  # - name: "Loading Dock"
+  #   url: "rtsp://admin:admin@192.168.1.100:554/cam/realmonitor"
+  #   enabled: true
+
+# --- Tracker ---
+tracker:
+  type: "bytetrack"                  # bytetrack or botsort
+  track_buffer: 30                   # Frames to keep lost tracks
+  match_threshold: 0.8
+
+# --- Detection Classes ---
+classes:
+  # PPE Violations
+  0: helmet
+  1: no_helmet
+  2: safety_vest
+  3: no_vest
+  4: gloves
+  5: no_gloves
+  6: goggles
+  7: no_goggles
+  8: mask
+  9: no_mask
+  # Hazard Detection
+  10: fire
+  11: smoke
+  12: sparks
+  13: gas_leak
+  14: oil_spill
+  # Worker Safety
+  15: person
+  16: fall
+  17: lying_person
+  18: running
+  19: unsafe_climb
+  20: restricted_area_intrusion
+  # Machinery Risk
+  21: forklift
+  22: heavy_machine
+  23: blocked_exit
+  24: conveyor_belt
+  25: hand_inside_machine
+
+# --- Restricted Zones ---
+# Polygons defined as list of [x, y] pixel coordinates
+zones:
+  - name: "Heavy Machinery Area"
+    polygon: [[100, 100], [400, 100], [400, 400], [100, 400]]
+    alert_classes: [15, 18, 19]      # person, running, unsafe_climb
+  - name: "Chemical Storage"
+    polygon: [[500, 200], [800, 200], [800, 500], [500, 500]]
+    alert_classes: [15]
+
+# --- Proximity Detection ---
+proximity:
+  forklift_person:
+    class_a: 21                      # forklift
+    class_b: 15                      # person
+    distance_threshold: 150          # pixels — trigger if bbox centroids closer than this
+    alert_message: "⚠️ COLLISION RISK: Forklift near worker!"
+  hand_machine:
+    class_a: 25                      # hand_inside_machine
+    class_b: 22                      # heavy_machine
+    distance_threshold: 80
+    alert_message: "🚨 DANGER: Hand detected near machine!"
+
+# --- Alert System ---
+alerts:
+  enabled: true
+  cooldown_seconds: 30               # Minimum seconds between same alert type
+
+  snapshot:
+    enabled: true
+    directory: "logs/snapshots"
+
+  csv:
+    enabled: true
+    filepath: "logs/incidents.csv"
+
+  telegram:
+    enabled: false
+    bot_token: "YOUR_BOT_TOKEN"
+    chat_id: "YOUR_CHAT_ID"
+
+  siren:
+    enabled: false
+    wav_file: "assets/siren.wav"
+
+  rest_api:
+    enabled: false
+    endpoint: "http://localhost:8080/api/alert"
+
+# --- Dashboard ---
+dashboard:
+  enabled: true
+  host: "0.0.0.0"
+  port: 5050
+  auth:
+    enabled: true
+    username: "admin"
+    password: "factory2024"
+
+# --- Logging ---
+logging:
+  level: "INFO"                      # DEBUG, INFO, WARNING, ERROR
+  log_dir: "logs"
+  max_log_size_mb: 50
+  backup_count: 5
+
+# --- Privacy ---
+privacy:
+  face_blur:
+    enabled: false
+    blur_strength: 51                # Gaussian kernel size (must be odd)
+  log_encryption:
+    enabled: false
+    key_file: "configs/.encryption_key"
+
+# --- Performance ---
+performance:
+  display_fps: true
+  display_gpu_stats: true
+  gpu_monitor_interval: 5           # seconds between GPU stat logs

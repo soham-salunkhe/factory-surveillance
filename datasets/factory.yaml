@@ -1,0 +1,62 @@
+# ============================================================
+# Factory AI — Dataset Configuration
+# ============================================================
+# Ultralytics YOLOv8 dataset YAML
+#
+# Directory structure:
+#   datasets/
+#   ├── factory.yaml       (this file)
+#   ├── images/
+#   │   ├── train/
+#   │   ├── val/
+#   │   └── test/
+#   └── labels/
+#       ├── train/
+#       ├── val/
+#       └── test/
+# ============================================================
+
+# Paths (relative to this YAML or absolute)
+path: ./datasets       # Dataset root directory
+train: images/train    # Train images
+val: images/val        # Validation images
+test: images/test      # Test images (optional)
+
+# Number of classes
+nc: 26
+
+# Class names (must match annotation labels)
+names:
+  # PPE Violations (0–9)
+  0: helmet
+  1: no_helmet
+  2: safety_vest
+  3: no_vest
+  4: gloves
+  5: no_gloves
+  6: goggles
+  7: no_goggles
+  8: mask
+  9: no_mask
+
+  # Hazard Detection (10–14)
+  10: fire
+  11: smoke
+  12: sparks
+  13: gas_leak
+  14: oil_spill
+
+  # Worker Safety (15–20)
+  15: person
+  16: fall
+  17: lying_person
+  18: running
+  19: unsafe_climb
+  20: restricted_area_intrusion
+
+  # Machinery Risk (21–25)
+  21: forklift
+  22: heavy_machine
+  23: blocked_exit
+  24: conveyor_belt
+  25: hand_inside_machine

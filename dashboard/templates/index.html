@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factory AI — Safety Monitoring Dashboard</title>
+    <meta name="description" content="Real-time AI-powered industrial safety monitoring system">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">
+                <span class="logo-icon">🏭</span>
+                <h1>Factory AI</h1>
+            </div>
+            <span class="badge badge-live">● LIVE</span>
+        </div>
+        <div class="header-right">
+            <div class="header-stat">
+                <span class="stat-label">FPS</span>
+                <span class="stat-value" id="fps-value">--</span>
+            </div>
+            <div class="header-stat">
+                <span class="stat-label">VRAM</span>
+                <span class="stat-value" id="vram-value">--</span>
+            </div>
+            <div class="header-stat">
+                <span class="stat-label">GPU</span>
+                <span class="stat-value" id="gpu-util-value">--</span>
+            </div>
+            <div class="header-stat">
+                <span class="stat-label">Alerts</span>
+                <span class="stat-value" id="alert-count">0</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Video Feed -->
+        <section class="video-section">
+            <div class="section-header">
+                <h2>📹 Live Camera Feed</h2>
+                <div class="camera-controls">
+                    <select id="camera-select" class="select-input">
+                        <option value="0">Main Floor Camera</option>
+                    </select>
+                </div>
+            </div>
+            <div class="video-container">
+                <img id="video-feed" src="/video_feed" alt="Live Camera Feed" class="video-feed">
+                <div class="video-overlay">
+                    <span class="overlay-badge" id="detection-count">0 detections</span>
+                    <span class="overlay-badge" id="tracking-count">0 tracked</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Side Panel -->
+        <aside class="side-panel">
+            <!-- GPU Stats -->
+            <section class="card gpu-card">
+                <h3>⚡ GPU Performance</h3>
+                <div class="gpu-stats">
+                    <div class="gpu-stat-row">
+                        <span>Device</span>
+                        <span id="gpu-name" class="gpu-value">--</span>
+                    </div>
+                    <div class="gpu-stat-row">
+                        <span>VRAM Usage</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="vram-bar" style="width: 0%"></div>
+                        </div>
+                        <span id="vram-detail" class="gpu-value">--</span>
+                    </div>
+                    <div class="gpu-stat-row">
+                        <span>GPU Utilization</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill progress-green" id="gpu-bar" style="width: 0%"></div>
+                        </div>
+                        <span id="gpu-detail" class="gpu-value">--</span>
+                    </div>
+                    <div class="gpu-stat-row">
+                        <span>Temperature</span>
+                        <span id="gpu-temp" class="gpu-value">--</span>
+                    </div>
+                    <div class="gpu-stat-row">
+                        <span>Power Draw</span>
+                        <span id="gpu-power" class="gpu-value">--</span>
+                    </div>
+                    <div class="gpu-stat-row">
+                        <span>Inference Latency</span>
+                        <span id="inference-latency" class="gpu-value">--</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Detection Summary -->
+            <section class="card detection-card">
+                <h3>🎯 Detection Summary</h3>
+                <div class="detection-summary" id="detection-summary">
+                    <div class="detection-row">
+                        <span class="det-category ppe">PPE Violations</span>
+                        <span class="det-count" id="ppe-count">0</span>
+                    </div>
+                    <div class="detection-row">
+                        <span class="det-category hazard">Hazards</span>
+                        <span class="det-count" id="hazard-count">0</span>
+                    </div>
+                    <div class="detection-row">
+                        <span class="det-category unsafe">Unsafe Behavior</span>
+                        <span class="det-count" id="unsafe-count">0</span>
+                    </div>
+                    <div class="detection-row">
+                        <span class="det-category machinery">Machinery Risk</span>
+                        <span class="det-count" id="machinery-count">0</span>
+                    </div>
+                </div>
+            </section>
+        </aside>
+    </main>
+
+    <!-- Incident Log -->
+    <section class="incidents-section">
+        <div class="section-header">
+            <h2>🚨 Recent Incidents</h2>
+            <button class="btn btn-ghost" onclick="clearIncidents()">Clear</button>
+        </div>
+        <div class="table-container">
+            <table class="incident-table">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Type</th>
+                        <th>Class</th>
+                        <th>Confidence</th>
+                        <th>Camera</th>
+                        <th>Message</th>
+                    </tr>
+                </thead>
+                <tbody id="incident-tbody">
+                    <tr class="empty-row">
+                        <td colspan="6">No incidents recorded yet</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <span>Factory AI Safety Monitoring v1.0.0</span>
+        <span>Powered by YOLOv8 + CUDA</span>
+    </footer>
+
+    <script src="/static/js/dashboard.js"></script>
+</body>
+
+</html>
